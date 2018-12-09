@@ -21,10 +21,10 @@ def findMinMax():
             if line != '\n' and line != '\n\r':
                 l = [float(x) for x in line.replace('\n', '').replace('\r', '').strip().split(' ')]
                 global dim
-                dim = len(l) - 1  # get number of variables in each line
+                dim = len(l) - 1 
                 train_data.append(l)
                 if dummy == 0:
-                    ran = len(l)  # ran is the length of each line of the training set
+                    ran = len(l) 
                     dummy += 1
     dct = {}
     for i in range(ran):
@@ -48,13 +48,12 @@ def findMinMax():
 
 
 def ScaleData():
-    dct = findMinMax()   # calls findMinMax() function
+    dct = findMinMax()  
 
     for j in range(len(train_data)):
         scaled_data[j] = []
         l = train_data[j]
         for i in range(len(l)):
-            # do not scale the y values:
             if i != len(l)-1:
                 y = (2 * ((l[i] - dct[i][0]) / (dct[i][1] - dct[i][0]))) - 1
                 scaled_data[j].append(y)
@@ -226,7 +225,6 @@ def testIt(dimz, hyper, description, a, data=None):
         scaled_data_test = [line[:-1] for line in data]
 
     else:
-        # scale the data:
         dct = findMinMax()
         test_data = []
 
@@ -238,9 +236,9 @@ def testIt(dimz, hyper, description, a, data=None):
         for i in range(len(test_data)):
             scaled_data_test.append([])
 
-        for j in range(len(test_data)): # for each line of the input numbers
+        for j in range(len(test_data)): 
             l_testData = test_data[j]
-            for i in range(len(l_testData)): # then for each number inside this line(based on column1 or 2 or ...)
+            for i in range(len(l_testData)):
                 y = (2 * ((l_testData[i] - dct[i][0]) / (dct[i][1] - dct[i][0]))) - 1
                 scaled_data_test[j].append(y)
 
@@ -254,7 +252,6 @@ def testIt(dimz, hyper, description, a, data=None):
             total += s
         results.append(total)
 
-    # results are always one line - each of them is one number
     if a == "final":
         for res in results:
             print(res)
@@ -280,7 +277,6 @@ for k in range(1, 6):
         total = 0
         for i in range(len(out_arr)):
             total += pow((out_arr[i] - lines_1[i]), 2)
-        #Quality =  math.sqrt(total) / (2 * len(out_arr))
         Quality =  total / (2 * len(out_arr))
         qualityList.append(Quality)
     evaluations.append(qualityList) # each number in each line is the error of one split of evaluation set
