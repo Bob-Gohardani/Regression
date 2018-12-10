@@ -12,7 +12,6 @@ validation_sets = []
 training_sets = []
 dim = 0
 
-
 def findMinMax():
     ran = 0
     dummy = 0
@@ -48,7 +47,7 @@ def findMinMax():
 
 
 def ScaleData():
-    dct = findMinMax()  
+    dct = findMinMax() 
 
     for j in range(len(train_data)):
         scaled_data[j] = []
@@ -78,11 +77,11 @@ def splitData():
     totalsubset= int(number_of_split)*2
     len_of_each= set_length/totalsubset
 
-# create all training sets
+
     for i in range(0, number_of_split):
         sub_set = []
         for j in range(0,int(len_of_each)):
-            #select random index
+           
             sub_line = []
             x=random.randint(0,len(setj)-1)
             for a in range (len(setj[0])):
@@ -91,11 +90,10 @@ def splitData():
             sub_set.append(sub_line)
         training_sets.append(sub_set)
 
-# create all validation sets
+
     for i in range(0, number_of_split):
         sub_set = []
         for j in range(0, int(len_of_each)):
-            # select random index
             sub_line = []
             x = random.randint(0, len(setj) - 1)
             for a in range (len(setj[0])):
@@ -105,14 +103,14 @@ def splitData():
         validation_sets.append(sub_set)
 
 def train(n,k,input_data):
-    gamma = 0.02 # learning rate
-    dimension = n # dimension of the linear function
+    gamma = 0.02
+    dimension = n 
     max_iters = 1000
-    threshold = 0.04   # when gets to this point stop iterations
-    params = [] # array of p0.....pn
+    threshold = 0.04   
+    params = [] 
     indiceZ = []
     Y = []
-    N = 0# length of the train_data array
+    N = 0
     gradQ = 0
     inputz = []
 
@@ -122,8 +120,6 @@ def train(n,k,input_data):
     nstring = ""
     for i in range(n+1):
         nstring+= str(i)
-
-
     l =  list(combinations_with_replacement(nstring, k))
     l = [x for x in l[::-1]]
     l2 = []
@@ -139,7 +135,7 @@ def train(n,k,input_data):
         desc.append([float(i) for i in string.split()])
 
     for line in desc:
-        params.append(line[len(line) - 1])  # last element of each line is the parameter
+        params.append(line[len(line) - 1])  
         indiceZ.append(line[:-1])
 
     input_arr = [line[:-1] for line in input_data]
@@ -155,6 +151,32 @@ def train(n,k,input_data):
             x.append(value)
         inputz.append(x)
 
+
+    n = len(params)-1
+    k =1
+    desc = []
+    nstring = ""
+    for i in range(n+1):
+        nstring+= str(i)
+    l =  list(combinations_with_replacement(nstring, k))
+    l = [x for x in l[::-1]]
+    l2 = []
+    for i in l:
+        l1 = list(i)
+        l2.append("".join([x for x in l1[::-1]]))
+    l2 = sorted(l2, reverse = True)
+
+    for i in l2:
+        string = ""
+        string += " ".join(i)
+        string += " "+str(round(random.uniform(-1, 1), 1))
+        desc.append([float(i) for i in string.split()])
+
+    params = []
+    for line in desc:
+        params.append(line[len(line) - 1]) 
+        indiceZ.append(line[:-1])
+
     N = len(inputz)
 
     def calc_f(i):
@@ -164,10 +186,9 @@ def train(n,k,input_data):
         for l in desc:
             s = float(params[start])
             start += 1
-            for j in l[:-1]:  # we multiplie each element in list with related number in input data
-                if(j) != 0 :
-                    s *= line[int(j) -1]
-                total += s
+            if(l[0]) != 0 :
+                s *= line[int(l[0]) -1]
+            total += s
         return total
 
     def find_num(param):
@@ -191,7 +212,7 @@ def train(n,k,input_data):
             d = derivative(i)
             params[i] = params[i] - gamma * d
             x += d**2
-        x = math.sqrt(x)    # this is the value of gradient for this iteration
+        x = math.sqrt(x)    
         gradQ = x
         return(gradQ)
 
@@ -200,6 +221,8 @@ def train(n,k,input_data):
         if (gradQ < threshold):
             break
     results = []
+    results.append([n, 1])
+
     for i in range(0, len(desc)):
         string = ""
         for j in range(0, len(desc[i])-1):
@@ -209,10 +232,11 @@ def train(n,k,input_data):
         results.append(x)
     return results
 
-def testIt(dimz, hyper, description, a, data=None):
-    desc = description
-    n = dimz
-    k = hyper
+def testIt(n1,k1, description, a, data=None):
+    n = description[0][0]
+    k = description[0][1]
+    desc = description[1:]
+
 
     def power(num, line):
         if num == 0:
@@ -225,6 +249,7 @@ def testIt(dimz, hyper, description, a, data=None):
         scaled_data_test = [line[:-1] for line in data]
 
     else:
+        # scale the data:
         dct = findMinMax()
         test_data = []
 
@@ -238,10 +263,47 @@ def testIt(dimz, hyper, description, a, data=None):
 
         for j in range(len(test_data)): 
             l_testData = test_data[j]
-            for i in range(len(l_testData)):
+            for i in range(len(l_testData)): 
                 y = (2 * ((l_testData[i] - dct[i][0]) / (dct[i][1] - dct[i][0]))) - 1
                 scaled_data_test[j].append(y)
 
+    indiceZ = []
+    k1 = int(k1)
+    n1 = int(n1)
+    desc1 = []
+    nstring = ""
+    for i in range(n1+1):
+        nstring+= str(i)
+    l =  list(combinations_with_replacement(nstring, k1))
+    l = [x for x in l[::-1]]
+    l2 = []
+    for i in l:
+        l1 = list(i)
+        l2.append("".join([x for x in l1[::-1]]))
+    l2 = sorted(l2, reverse = True)
+
+    for i in l2:
+        string = ""
+        string += " ".join(i)
+        string += " "+str(round(random.uniform(-1, 1), 1))
+        desc1.append([float(i) for i in string.split()])
+
+    for line in desc1:
+        indiceZ.append(line[:-1])
+
+    input_arr = scaled_data_test
+    inputz = []
+    for it, input in enumerate(input_arr):
+        x = []
+        for indices in indiceZ[:-1]:
+            value = 1.0
+            for i in indices:
+                if i != 0:
+                    value *= input[int(i)-1]
+            x.append(value)
+        inputz.append(x)
+    scaled_data_test = inputz
+    
     results = []
     for line in scaled_data_test:
         total = 0
@@ -251,7 +313,6 @@ def testIt(dimz, hyper, description, a, data=None):
                 s *= power(float(m[i]), line)
             total += s
         results.append(total)
-
     if a == "final":
         for res in results:
             print(res)
@@ -263,23 +324,21 @@ def testIt(dimz, hyper, description, a, data=None):
 splitData()
 evaluations = []
 for k in range(1, 6):
-    # we train training set then use the parameters for validation set then based on errors choose Hyper Parameter
-    # when you train with a train_set, you need to test it with validation_set of same set
     qualityList = []
     qualityList.append(k)
     for i in range(len(training_sets)):
         train_set = training_sets[i]
         desc_valid = train(dim, k, train_set)
         validation_set = validation_sets[i]
-        out_arr = testIt(dim, k, desc_valid, "valid", validation_set) # get result of test with validatio set X
+        out_arr = testIt(dim, k, desc_valid, "valid", validation_set) 
         lines_1 = []
-        lines_1 = [line[-1] for line in validation_set]   # select Y input from validation_set
+        lines_1 = [line[-1] for line in validation_set]  
         total = 0
         for i in range(len(out_arr)):
             total += pow((out_arr[i] - lines_1[i]), 2)
         Quality =  total / (2 * len(out_arr))
         qualityList.append(Quality)
-    evaluations.append(qualityList) # each number in each line is the error of one split of evaluation set
+    evaluations.append(qualityList)
 
 eva_1 =[line[1:] for line in evaluations]
 eva_1 =[sum(line)/len(line) for line in eva_1]
@@ -291,5 +350,5 @@ for key, value in scaled_data.iteritems():
     temp = value
     scaled_full.append(temp)
 
-description_final = train(dim, hyper, scaled_full) # final training of the full data to get correct parameters
+description_final = train(dim, hyper, scaled_full) 
 testIt(dim, hyper, description_final, "final")
