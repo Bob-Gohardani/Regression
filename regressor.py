@@ -103,10 +103,9 @@ def splitData():
         validation_sets.append(sub_set)
 
 def train(n,k,input_data):
-    gamma = 0.02
-    dimension = n 
-    max_iters = 1000
-    threshold = 0.04   
+    gamma = 0.09
+    max_iters = 5000
+    threshold = 0.0001   
     params = [] 
     indiceZ = []
     Y = []
